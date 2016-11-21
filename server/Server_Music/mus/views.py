@@ -15,15 +15,10 @@ import json
 @csrf_exempt
 def getPreferenceList(request):
 	if request.method == 'POST':
-		print(request.POST)
 		g=Genre.objects.filter(name__in=list(request.POST.values))
-		print(g)
-		# toreturn=[]
-		# if len(g) != 0:
-		# 	songs = Song.objects.filter(genre=g)
-		# 	x = serializers.serialize('json',songs)
-			
-		return HttpResponse("Hi")
+		songs = Song.objects.filter(genre__in=g)
+	 	x = serializers.serialize('json',songs)		
+		return HttpResponse(x)
 	return JsonResponse({'songs':[]})
 
 # @csrf_exempt
