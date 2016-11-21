@@ -38,7 +38,7 @@ def f(x,r):
 @csrf_exempt
 def rate(request):
 	if request.method == 'POST':
-		u = AppUser.objects.filter(username=request.POST['id'])
+		u = AppUser.objects.filter(username=request.POST.get('id'))	
 		if len(u)!=0:
 			user = u[0]
 			initdict={}
@@ -51,9 +51,9 @@ def rate(request):
 						r.save()
 					else:
 						rs[0].value=request.POST[song][0]
-						user.rating_set.update(rs[0])
+						user.rating_set.filter(song_id=song).update(value=int(request.POST[song][0]))
 						rs[0].save()
-						
+
 					initdict[song] = int(request.POST[song][0]) 
 		 
 			
@@ -78,10 +78,10 @@ def rate(request):
 				for r in rates:
 					if r.song_id in songs and r.song_id not in initdict:
 						songs[r.song_id]=songs[r.song_id] + f(i[0],r.value)
-					else if r.song_id not in songs:
+					elif r.song_id not in songs:
 						songs[r.song_id]=f(i[0],r.value)
 			sorted_songs = list(sorted(songs.items(), key=operator.itemgetter(1),reverse=True))
-			print(Final)
+			print('Final')
 			print(sorted_songs)
 			return JsonResponse(json.dumps(sorted_songs))
 	return JsonResponse({'status':[]})
