@@ -54,7 +54,7 @@ public class SongRatelistAdapter extends BaseAdapter {
         // Get view for row item
         View rowView = mInflater.inflate(R.layout.songlist_listitem, parent, false);
         RatingBar ratingBar = (RatingBar) rowView.findViewById(R.id.ratingBar);
-        ratingBar.setRating(3);
+        ratingBar.setRating(0);
         Log.e("INSIDE",((Integer) mDataSource.size()).toString());
         for(int i=0; i<mDataSource.size();i++)
             Log.e("INSIDE",mDataSource.get(i));

@@ -32,10 +32,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.security.SecureRandom;
+import java.math.BigInteger;
 
 public class Categories extends AppCompatActivity {
     private ListView mListView;
     Context context;
+    public String unique_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,32 +112,20 @@ public class Categories extends AppCompatActivity {
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String responseString) {
-                            Log.d("LOGIN", responseString);
-                            if (responseString.equals("-1")) {
-                                Log.d("LOGIN", "Invalid up");
-                                Toast.makeText(context,"Some error ocurred",Toast.LENGTH_SHORT);
-                            } else {
-                                String token, fullname;
-                                try {
-                                    Log.e("JSON", responseString);
-                                    final JSONArray response = new JSONArray(responseString);
-                                    Log.e("JSON", "1");
-                                    JSONObject user = response.getJSONObject(0).getJSONObject("fields");
-                                    Log.e("JSON", "2");
-                                    fullname = user.getString("fullname");
-                                    Log.e("JSON", "3");
-                                    token = user.getString("token");
-                                    Log.e("JSON", "4");
-
-                                } catch (Exception e) {
-                                    Log.e("JSON", "Login");
-                                    token = null;
-                                    fullname = null;
-                                }
-
-
-
+                            if(responseString=="-1") {
+                                Log.e("ERR","-1 resp");
+                                Toast.makeText(getApplicationContext(),"Some error ocurred 2",Toast.LENGTH_SHORT).show();
+                                return;
                             }
+                            else{
+                                Intent intent = new Intent(context,SongRateList.class);
+                                intent.putExtra("songs",responseString);
+                                intent.putExtra("id",unique_id);
+                                startActivity(intent);
+                            }
+
+
+
                         }
                     }, new Response.ErrorListener() {
                 @Override
@@ -147,11 +138,14 @@ public class Categories extends AppCompatActivity {
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
+                    SecureRandom random = new SecureRandom();
+                    unique_id = new BigInteger(20, random).toString(32);
+                    params.put("id",unique_id);
+
                     for(Integer i=0; i<fc.size(); i++){
                         params.put(i.toString(),fc.get(i));
                         Log.e("WEEEES",fc.get(i));
                     }
-//                    params.put("token","f57609bb7440377f34628ba65047537ed316d8d665e4eed899629a9e8e9f");
                     return params;
                 }
 
