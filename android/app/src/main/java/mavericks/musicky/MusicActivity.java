@@ -10,37 +10,17 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerFragment;
 import com.google.android.youtube.player.YouTubePlayerView;
-import com.google.api.services.samples.youtube.cmdline.Auth;
-import com.google.api.services.youtube.YouTube;
-import com.google.api.services.youtube.model.GeoPoint;
-import com.google.api.services.youtube.model.SearchListResponse;
-import com.google.api.services.youtube.model.SearchResult;
-import com.google.api.services.youtube.model.Thumbnail;
-import com.google.api.services.youtube.model.Video;
-import com.google.api.services.youtube.model.VideoListResponse;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 public class MusicActivity extends YouTubeBaseActivity
         implements YouTubePlayer.OnInitializedListener {
-
-    Bundle bundly=getIntent().getExtras();
-    String searchfield=bundly.getString("searchfield");
-    public static final String DEVELOPER_KEY="AIzaSyAI5YtqVjFmlp-2Y4r4gPM4wZ2DAQDwL5M";
-    public static String VIDEO_ID"";
+    String searchfield;
+    public static String VIDEO_ID="";
     public static final int RECOVERY_DIALOG_REQUEST=1;
-
     YouTubePlayerFragment myYouTubePlayerFragment;
-
-    try{
-
-        URL base = new URL("https://www.googleapis.com/youtube/v3/search?part=snippet&key=");
-    }
-    catch(MalformedURLException e)
-    {
-        e.printStackTrace();
-    }
+    public static final String DEVELOPER_KEY="AIzaSyAI5YtqVjFmlp-2Y4r4gPM4wZ2DAQDwL5M";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +28,9 @@ public class MusicActivity extends YouTubeBaseActivity
         myYouTubePlayerFragment = (YouTubePlayerFragment)getFragmentManager()
                 .findFragmentById(R.id.youtubeplayerfragment);
         myYouTubePlayerFragment.initialize(DEVELOPER_KEY, this);
+        Bundle bundle=getIntent().getExtras();
+        
+        VIDEO_ID=bundle.getString("searchfield");
     }
 
 
