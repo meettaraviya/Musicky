@@ -44,9 +44,16 @@ def rate(request):
 			initdict={}
 			for song in request.POST:
 				if song!='id' :
-					r = Rating(value=int(request.POST[song][0]) ,song_id=song)
-					user.rating_set.add(r)
-					r.save()
+					rs = Rating.objects.filter(song_id=song)
+					if len(rs)==0:
+						r = Rating(value=int(request.POST[song][0]) ,song_id=song)
+						user.rating_set.add(r)
+						r.save()
+					else:
+						rs[0].value=request.POST[song][0]
+						user.rating_set.update(rs[0])
+						rs[0].save()
+						
 					initdict[song] = int(request.POST[song][0]) 
 		 
 			
@@ -71,7 +78,7 @@ def rate(request):
 				for r in rates:
 					if r.song_id in songs and r.song_id not in initdict:
 						songs[r.song_id]=songs[r.song_id] + f(i[0],r.value)
-					else :
+					else if r.song_id not in songs:
 						songs[r.song_id]=f(i[0],r.value)
 			sorted_songs = list(sorted(songs.items(), key=operator.itemgetter(1),reverse=True))
 			print(Final)
