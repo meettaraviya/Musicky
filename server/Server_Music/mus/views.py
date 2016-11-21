@@ -21,13 +21,11 @@ def getPreferenceList(request):
 		return HttpResponse(x)
 	return JsonResponse({'songs':[]})
 
-# @csrf_exempt
-# def recommend(request):
-# 	if request.method == 'POST':
-# 		json = demjson.decode(request.POST)
-# 		for song in json:
-# 			Song.objects.get(name=song) 
-# 				songs = Song.objects.filter(genre=g)
-# 				x = serializers.serialize('json',songs)
-# 				return HttpResponse(x)
-# 	return JsonResponse({'songs':[]})
+@csrf_exempt
+def recommend(request):
+	if request.method == 'POST':
+		for song in request.POST:	
+			s = Song.objects.get(name=song)
+			s.rating=request.POST[song]
+		
+	return JsonResponse({'songs':[]})
