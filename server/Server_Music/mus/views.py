@@ -17,13 +17,15 @@ def getPreferenceList(request):
 	if request.method == 'POST':
 		print(request.POST)
 		imp = list(request.POST.values())
-		userid = imp.pop()
+		userid = request.POST['id']
+		imp.pop(request.POST['id'])
 		a = AppUser(username=userid)
 		print(a)
-		# a.save()
-		# for i in imp :
-		# 	a.add(genre=i)		
+		a.save()
 		g=Genre.objects.filter(name__in=imp)
+		for gen in g:
+			a.genre.add(gen)
+
 		songs = Song.objects.filter(genre__in=g)
 		x = serializers.serialize('json',songs)		
 		return HttpResponse(x)
@@ -35,5 +37,5 @@ def recommend(request):
 		for song in request.POST:	
 			s = Song.objects.get(name=song)
 			s.rating=request.POST[song]
-
+			
 	return JsonResponse({'songs':[]})
