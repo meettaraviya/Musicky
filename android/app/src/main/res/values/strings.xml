@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Musicky</string>
+    <string name="base_url">random</string>
 </resources>
