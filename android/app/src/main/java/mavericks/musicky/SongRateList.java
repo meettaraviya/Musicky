@@ -40,7 +40,7 @@ public class SongRateList extends AppCompatActivity {
         setContentView(R.layout.songrate_list);
         response = getIntent().getExtras().getString("songs");
         unique_id = getIntent().getExtras().getString("id");
-        Log.e("NewResp",response);
+        //Log.e("NewResp",response);
         mListView = (ListView) findViewById(R.id.songratelist_list);
 // 1
         rating = new HashMap<>();
@@ -48,7 +48,7 @@ public class SongRateList extends AppCompatActivity {
 // 3
         try{
             songs = new JSONArray(response);
-            Log.e("songs",songs.toString());
+            //Log.e("songs",songs.toString());
             for(Integer i=0; i<songs.length(); i++){
 
                 listItems.add(songs.getJSONObject(i).getString("pk"));
@@ -126,7 +126,7 @@ public class SongRateList extends AppCompatActivity {
                                 return;
                             }
                             else{
-                               Log.e("NO ERR","-1 resp");
+                                Log.e("NO ERR","-1 resp");
                             }
 
 

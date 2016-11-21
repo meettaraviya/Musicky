@@ -88,7 +88,7 @@ public class Categories extends AppCompatActivity {
                     }
                 }
         );
-       
+
     }
 
     private class SendCategs implements Runnable {
