@@ -21,13 +21,14 @@ def getPreferenceList(request):
 		for i in request.POST:
 			imp.append(request.POST[i])
 		a = AppUser(username=userid)
-		print(a)
-		g=Genre.objects.filter(name__in=imp)
-		print(g)		
-		for gen in g:
-			a.genres.add(gen)
 		a.save()
+		print(a)
+		g=Genre.objects.filter(name__in=imp)	
+		for gen in g:
+			print(gen)	
+			a.genres.add(gen)
 		songs = Song.objects.filter(genre__in=g)
+		print(songs)
 		x = serializers.serialize('json',songs)		
 		return HttpResponse(x)
 	return JsonResponse({'songs':[]})
