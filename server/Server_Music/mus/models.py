@@ -10,7 +10,6 @@ class Genre(models.Model):
 	
 class Song(models.Model):
 	genre = models.ForeignKey(Genre)
-	rating = models.SmallIntegerField(default=0)
 	artist = models.TextField(max_length=50)
 	name = models.TextField(max_length=50,primary_key=True)
 
@@ -23,3 +22,6 @@ class AppUser(models.Model):
 	songs = models.ManyToManyField(Song)
 	def __str__(self):
 		return "%s" %(self.username)
+
+# class Rating(models.Model):
+# 	songs = models.ManyToManyField(Song)
