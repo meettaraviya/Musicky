@@ -69,12 +69,12 @@ def rate(request):
 				print("Rates")
 				print(rates)
 				for r in rates:
-					print(r)
 					if r.song_id in songs and r.song_id not in initdict:
-						song[r.song_id]=song[r.song_id] + f(x,r.value)
+						songs[r.song_id]=songs[r.song_id] + f(i[0],r.value)
 					else :
-						song[r.song_id]=f(x,r.value)
-			sorted_songs = sorted(songs.items(), key=operator.itemgetter(1),reverse=True)
+						songs[r.song_id]=f(i[0],r.value)
+			sorted_songs = list(sorted(songs.items(), key=operator.itemgetter(1),reverse=True))
+			print(Final)
 			print(sorted_songs)
 			return JsonResponse(json.dumps(sorted_songs))
 	return JsonResponse({'status':[]})
