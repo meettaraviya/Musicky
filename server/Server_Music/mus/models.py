@@ -24,7 +24,7 @@ class AppUser(models.Model):
 		return "%s" %(self.username)
 
 class Rating(models.Model):
-	user = models.ForeignKey(AppUser)
+	user = models.ForeignKey(AppUser,blank=True)
 	song_id = models.TextField(max_length=50)
 	value = models.SmallIntegerField()
 	def __str__(self):

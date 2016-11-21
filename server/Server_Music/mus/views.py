@@ -34,19 +34,23 @@ def getPreferenceList(request):
     return JsonResponse({'songs':[]})
 
 
-@csrf_exempt
 def rate(request):
-	if request.method == 'POST':
-		u = AppUser.objects.filter(username=request.POST['id'])
-		if len(users)!=0:
-			user = users[0]
-			songs = user.songs
-			for song in songs:
-				r = Rating(value=request.POST[song.name] ,song_id=song.name)
-				r.save()
-				user.rating_set.add(r)
-			return JsonResponse({'status':'yes'})
-	return JsonResponse({'status':'no'})
+    if request.method == 'POST':
+        print(request.POST)
+        u = AppUser.objects.filter(username=request.POST['id'])
+        print(u)
+        if len(u)!=0:
+            user = u[0]
+            print(user)
+            for song in request.POST:
+                if song!='id' :
+                    r = Rating(value=int(request.POST[song][0]) ,song_id=song)
+                    r.save()
+                    print(r)
+                    user.rating_set.add(r)
+            return JsonResponse({'status':'yes'})
+    return JsonResponse({'status':'no'})
+
 
 @csrf_exempt
 def recommend(request):
