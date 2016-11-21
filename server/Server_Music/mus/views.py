@@ -45,9 +45,9 @@ def rate(request):
             for song in request.POST:
                 if song!='id' :
                     r = Rating(value=int(request.POST[song][0]) ,song_id=song)
-                    r.save()
                     print(r)
                     user.rating_set.add(r)
+                    r.save()
             return JsonResponse({'status':'yes'})
     return JsonResponse({'status':'no'})
 
