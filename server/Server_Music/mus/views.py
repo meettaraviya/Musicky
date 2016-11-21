@@ -16,9 +16,10 @@ import json
 def getPreferenceList(request):
 	if request.method == 'POST':
 		print(request.POST)
-		imp = list(request.POST.values())
 		userid = request.POST['id']
-		imp.pop(request.POST['id'])
+		imp=[]
+		for i in request.POST
+			imp.append(request.POST[i])
 		a = AppUser(username=userid)
 		print(a)
 		a.save()
@@ -37,5 +38,5 @@ def recommend(request):
 		for song in request.POST:	
 			s = Song.objects.get(name=song)
 			s.rating=request.POST[song]
-			
+
 	return JsonResponse({'songs':[]})
