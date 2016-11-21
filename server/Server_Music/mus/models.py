@@ -6,11 +6,6 @@ class Genre(models.Model):
 
 # class Artist(models.Model):
 #    name = models.TextField(max_length=50) 
-
-class AppUser(models.Model)
-	user = models.OneToOneField(User, on_delete=models.CASCADE)
-	genres = models.ManyToManyField(Genre)
-	songs = models.ManyToManyField(Song)
 	
 class Song(models.Model):
 	genre = models.ForeignKey(Genre)
@@ -18,4 +13,8 @@ class Song(models.Model):
 	artist = models.TextField(max_length=50)
 	name = models.TextField(max_length=50)
 	url = models.TextField(max_length=50)
-	
+
+class AppUser(models.Model):
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	genres = models.ManyToManyField(Genre)
+	songs = models.ManyToManyField(Song)
