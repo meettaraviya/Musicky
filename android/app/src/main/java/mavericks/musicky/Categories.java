@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -76,8 +77,11 @@ public class Categories extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),"Please select atleast 1 category",Toast.LENGTH_SHORT).show();
                         }
                         else{
+                            EditText mText=(EditText) findViewById(R.id.search_text);
+                            String search=mText.getText().toString();
                             Intent intent = new Intent(getApplicationContext(), MusicActivity.class);
                             intent.putExtra("favcategs",userPrefStrings);
+                            intent.putExtra("searchfield",search);
                             startActivity(intent);
                         }
 

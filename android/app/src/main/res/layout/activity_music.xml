@@ -13,16 +13,8 @@
     android:name="com.google.android.youtube.player.YouTubePlayerFragment"
     android:id="@+id/youtubeplayerfragment"
     android:layout_width="match_parent"
-    android:layout_height="300dp"
+    android:layout_height="match_parent"
     android:layout_alignParentRight="true"
     android:layout_alignParentEnd="true"
     />
-    <Button
-        android:text="Play :D"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="196dp"
-        android:id="@+id/button" />
 </RelativeLayout>
