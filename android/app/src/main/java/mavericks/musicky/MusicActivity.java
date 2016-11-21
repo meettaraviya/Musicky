@@ -29,7 +29,7 @@ public class MusicActivity extends YouTubeBaseActivity
                 .findFragmentById(R.id.youtubeplayerfragment);
         myYouTubePlayerFragment.initialize(DEVELOPER_KEY, this);
         Bundle bundle=getIntent().getExtras();
-        
+
         VIDEO_ID=bundle.getString("searchfield");
     }
 

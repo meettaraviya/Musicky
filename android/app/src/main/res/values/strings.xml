@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Musicky</string>
-    <string name="base_url">http://13.75.92.70:8001/</string>
+    <string name="base_url">http://13.75.92.70:8000/</string>
     <string name="facebook_app_id">137881020021750</string>
     <string name="title_activity_login">Sign in</string>
 

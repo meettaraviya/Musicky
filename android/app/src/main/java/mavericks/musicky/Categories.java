@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,28 +24,22 @@ import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
+import java.security.SecureRandom;
+import java.math.BigInteger;
 
 public class Categories extends AppCompatActivity {
     private ListView mListView;
     Context context;
-    public String search,final_response;
-    public static final String DEVELOPER_KEY="AIzaSyAI5YtqVjFmlp-2Y4r4gPM4wZ2DAQDwL5M";
+    public String unique_id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,71 +81,16 @@ public class Categories extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),"Please select atleast 1 category",Toast.LENGTH_SHORT).show();
                         }
                         else{
-                            EditText mText=(EditText) findViewById(R.id.search_text);
-                            search=mText.getText().toString();
-                            searchAndFind online_search= new searchAndFind(search);
-                            new Thread(online_search,"searhing").start();
-                            Intent intent = new Intent(getApplicationContext(), MusicActivity.class);
-                            intent.putExtra("favcategs",userPrefStrings);
-                            intent.putExtra("searchfield",final_response);
-                            startActivity(intent);
-//                            SendCategs sendCategs = new SendCategs(userPrefStrings);
-//                            new Thread(sendCategs,"SendCategs").start();
-
+                            SendCategs sendCategs = new SendCategs(userPrefStrings);
+                            new Thread(sendCategs,"SendCategs").start();
                         }
 
                     }
                 }
         );
-       
+
     }
-    private class searchAndFind implements Runnable {
-        String inp1;
-        public searchAndFind(String input)
-        {
-            inp1=input;
-        }
 
-        @Override
-        public void run() {
-            try {
-                String base1 = "https://www.googleapis.com/youtube/v3/search?part=snippet&key=AIzaSyAI5YtqVjFmlp-2Y4r4gPM4wZ2DAQDwL5M&q=";
-                base1=base1+inp1;
-                URL final_s1=new URL(base1);
-                URLConnection connect= final_s1.openConnection();
-                InputStream response = connect.getInputStream();
-                String inputStreamString = new Scanner(response,"UTF-8").useDelimiter("\\A").next();
-                Log.e("RESPONSEEEEEEEEEEEEEEEE",inputStreamString);
-//
-//
-//                BufferedReader streamReader = new BufferedReader(new InputStreamReader(response, "UTF-8"));
-//                StringBuilder responseStrBuilder = new StringBuilder();
-//                String inputStr;
-//
-//
-//                while ((inputStr = streamReader.readLine()) != null) {
-//                    responseStrBuilder.append(inputStr);
-//                }
-                JSONObject response_JSON=new JSONObject(inputStreamString);
-//                Log.e("TIefeeevEEEEEEE",response.toString());
-
-
-                String resp= response_JSON.getJSONArray("items").getJSONObject(0).getJSONObject("id").getString("videoId");
-                final_response=resp;
-                Log.e("TIMEEEEEEEEE",final_response);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-            catch (JSONException e)
-            {
-                e.printStackTrace();
-            }
-        }
-    }
     private class SendCategs implements Runnable {
         ArrayList<String>  fc;
         public SendCategs(ArrayList<String> favCategs) {
@@ -174,32 +112,20 @@ public class Categories extends AppCompatActivity {
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String responseString) {
-                            Log.d("LOGIN", responseString);
-                            if (responseString.equals("-1")) {
-                                Log.d("LOGIN", "Invalid up");
-                                Toast.makeText(context,"Some error ocurred",Toast.LENGTH_SHORT);
-                            } else {
-                                String token, fullname;
-                                try {
-                                    Log.e("JSON", responseString);
-                                    final JSONArray response = new JSONArray(responseString);
-                                    Log.e("JSON", "1");
-                                    JSONObject user = response.getJSONObject(0).getJSONObject("fields");
-                                    Log.e("JSON", "2");
-                                    fullname = user.getString("fullname");
-                                    Log.e("JSON", "3");
-                                    token = user.getString("token");
-                                    Log.e("JSON", "4");
-
-                                } catch (Exception e) {
-                                    Log.e("JSON", "Login");
-                                    token = null;
-                                    fullname = null;
-                                }
-
-
-
+                            if(responseString=="-1") {
+                                Log.e("ERR","-1 resp");
+                                Toast.makeText(getApplicationContext(),"Some error ocurred 2",Toast.LENGTH_SHORT).show();
+                                return;
                             }
+                            else{
+                                Intent intent = new Intent(context,SongRateList.class);
+                                intent.putExtra("songs",responseString);
+                                intent.putExtra("id",unique_id);
+                                startActivity(intent);
+                            }
+
+
+
                         }
                     }, new Response.ErrorListener() {
                 @Override
@@ -212,11 +138,14 @@ public class Categories extends AppCompatActivity {
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
+                    SecureRandom random = new SecureRandom();
+                    unique_id = new BigInteger(20, random).toString(32);
+                    params.put("id",unique_id);
+
                     for(Integer i=0; i<fc.size(); i++){
                         params.put(i.toString(),fc.get(i));
                         Log.e("WEEEES",fc.get(i));
                     }
-//                    params.put("token","f57609bb7440377f34628ba65047537ed316d8d665e4eed899629a9e8e9f");
                     return params;
                 }
 
