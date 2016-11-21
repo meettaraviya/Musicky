@@ -23,5 +23,9 @@ class AppUser(models.Model):
 	def __str__(self):
 		return "%s" %(self.username)
 
-# class Rating(models.Model):
-# 	songs = models.ManyToManyField(Song)
+class Rating(models.Model):
+	user = models.ForeignKey(AppUser)
+	song_id = models.TextField(max_length=50)
+	value = models.SmallIntegerField()
+	def __str__(self):
+		return "%s and %s : %s" %(self.name, self.song_id, self.value)

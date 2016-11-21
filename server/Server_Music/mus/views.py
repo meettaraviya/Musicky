@@ -14,33 +14,38 @@ import json
 
 @csrf_exempt
 def getPreferenceList(request):
-	if request.method == 'POST':
-		print(request.POST)
-		userid = request.POST['id']
-		imp=[]
-		for i in request.POST:
-			imp.append(request.POST[i])
-		a = AppUser(username=userid)
-		a.save()
-		print(a)
-		g=Genre.objects.filter(name__in=imp)	
-		for gen in g:
-			print(gen)	
-			a.genres.add(gen)
-		songs = Song.objects.filter(genre__in=g)
-		# print(songs)
-		#x = serializers.serialize('json',songs)		
-		return HttpResponse("hi")
-	return JsonResponse({'songs':[]})
+    if request.method == 'POST':
+	    print(request.POST)
+	    userid = request.POST['id']
+	    imp=[]
+	    for i in request.POST:
+	        imp.append(request.POST[i])
+	    a = AppUser(username=userid)
+	    a.save()
+	    print(a)
+	    g=Genre.objects.filter(name__in=imp)
+	    for gen in g:
+	        print(gen)
+	        a.genres.add(gen)
+	    songs = Song.objects.filter(genre__in=g)
+	    print(songs)
+	    x = serializers.serialize('json',songs)
+    return HttpResponse(x)
+    return JsonResponse({'songs':[]})
+
 
 @csrf_exempt
 def rate(request):
 	if request.method == 'POST':
-		for song in request.POST:	
-			s = Song.objects.get(name=song)
-			s.rating=request.POST[song]
-			s.save()
-		return JsonResponse({'status':'yes'})
+		u = AppUser.objects.filter(username=request.POST['id'])
+		if len(users)!=0:
+			user = users[0]
+			songs = user.songs
+			for song in songs:
+				r = Rating(value=request.POST[song.name] ,song_id=song.name)
+				r.save()
+				user.rating_set.add(r)
+			return JsonResponse({'status':'yes'})
 	return JsonResponse({'status':'no'})
 
 @csrf_exempt
