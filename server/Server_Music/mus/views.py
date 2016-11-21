@@ -27,9 +27,9 @@ def getPreferenceList(request):
 		for gen in g:
 			print(gen)	
 			a.genres.add(gen)
-		# songs = Song.objects.filter(genre__in=g)
+		songs = Song.objects.filter(genre__in=g)
 		# print(songs)
-		# x = serializers.serialize('json',songs)		
+		#x = serializers.serialize('json',songs)		
 		return HttpResponse("hi")
 	return JsonResponse({'songs':[]})
 
