@@ -16,9 +16,14 @@ import json
 def getPreferenceList(request):
 	if request.method == 'POST':
 		print(request.POST)
-		# userid = list(request.POST.keys())[0]
-		# g=Genre.objects.filter(name__in=list(request.POST[userid].values()))
-		g=Genre.objects.filter(name__in=list(request.POST.values()))
+		imp = list(request.POST.values())
+		userid = imp.pop()
+		a = AppUser(username=userid)
+		print(a)
+		# a.save()
+		# for i in imp :
+		# 	a.add(genre=i)		
+		g=Genre.objects.filter(name__in=imp)
 		songs = Song.objects.filter(genre__in=g)
 		x = serializers.serialize('json',songs)		
 		return HttpResponse(x)
