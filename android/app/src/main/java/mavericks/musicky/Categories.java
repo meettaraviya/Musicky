@@ -21,6 +21,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -34,11 +36,15 @@ import java.util.Map;
 
 public class Categories extends AppCompatActivity {
     private ListView mListView;
-
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = this;
+
+//        FacebookSdk.sdkInitialize(getApplicationContext());
+//        AppEventsLogger.activateApp(this);
         setContentView(R.layout.categories);
 
         mListView = (ListView) findViewById(R.id.categories_list);
@@ -60,18 +66,14 @@ public class Categories extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         Boolean somethingSelected = false;
-                        int n=0;
+
+                        ArrayList<String> userPrefStrings = new ArrayList<String>();
                         for(int i=0; i<adapter.mUserPref.size(); i++){
                             if(adapter.mUserPref.get(i)){
                                 somethingSelected =true;
-                                n++;
+                                userPrefStrings.add(listItems.get(i));
+
                             }
-                        }
-                        String [] userPrefStrings = new String[n];
-                        n=0;
-                        for(int i=0; i<n; i++){
-                            while(!adapter.mUserPref.get(n)) n++;
-                            userPrefStrings[i] = listItems.get(n);
                         }
                         if(!somethingSelected){
                             Toast.makeText(getApplicationContext(),"Please select atleast 1 category",Toast.LENGTH_SHORT).show();
@@ -83,11 +85,86 @@ public class Categories extends AppCompatActivity {
                             intent.putExtra("favcategs",userPrefStrings);
                             intent.putExtra("searchfield",search);
                             startActivity(intent);
+                            SendCategs sendCategs = new SendCategs(userPrefStrings);
+                            new Thread(sendCategs,"SendCategs").start();
                         }
 
                     }
                 }
         );
        
+    }
+
+    private class SendCategs implements Runnable {
+        ArrayList<String>  fc;
+        public SendCategs(ArrayList<String> favCategs) {
+            fc = favCategs;
+            for(int i=0; i<favCategs.size(); i++) Log.e("favcat",favCategs.get(i));
+            for(int i=0; i<fc.size(); i++) Log.e("fc",fc.get(i));
+        }
+
+        @Override
+        public void run() {
+            // Instantiate the RequestQueue.
+            RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+            String url = getString(R.string.base_url) + "api/getlist/";
+            Log.e("URL", url);
+            Log.e("LOGIN", "sending request...");
+
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String responseString) {
+                            Log.d("LOGIN", responseString);
+                            if (responseString.equals("-1")) {
+                                Log.d("LOGIN", "Invalid up");
+                                Toast.makeText(context,"Some error ocurred",Toast.LENGTH_SHORT);
+                            } else {
+                                String token, fullname;
+                                try {
+                                    Log.e("JSON", responseString);
+                                    final JSONArray response = new JSONArray(responseString);
+                                    Log.e("JSON", "1");
+                                    JSONObject user = response.getJSONObject(0).getJSONObject("fields");
+                                    Log.e("JSON", "2");
+                                    fullname = user.getString("fullname");
+                                    Log.e("JSON", "3");
+                                    token = user.getString("token");
+                                    Log.e("JSON", "4");
+
+                                } catch (Exception e) {
+                                    Log.e("JSON", "Login");
+                                    token = null;
+                                    fullname = null;
+                                }
+
+
+
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(getApplicationContext(),"Please check your internet connection",Toast.LENGTH_SHORT).show();
+                    Log.d("LOGIN", "response not received");
+                    for(int i=0; i<fc.size(); i++) if(fc.get(i)!=null) Log.e("RESP",fc.get(i));
+                }
+            }) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
+                    for(Integer i=0; i<fc.size(); i++){
+                        params.put(i.toString(),fc.get(i));
+                        Log.e("WEEEES",fc.get(i));
+                    }
+//                    params.put("token","f57609bb7440377f34628ba65047537ed316d8d665e4eed899629a9e8e9f");
+                    return params;
+                }
+
+            };
+
+            queue.add(stringRequest);
+        }
     }
 }

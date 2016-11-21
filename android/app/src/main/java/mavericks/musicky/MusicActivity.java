@@ -1,7 +1,6 @@
 package mavericks.musicky;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -33,15 +32,15 @@ public class MusicActivity extends YouTubeBaseActivity
     public static final int RECOVERY_DIALOG_REQUEST=1;
 
     YouTubePlayerFragment myYouTubePlayerFragment;
-    public class SearchAndChange extends AsyncTask<Void,Void,String>{
 
-        @Override
-        protected void doInBackground(String... params) {
-// perform long running operation operation
-            return null;
-        }
+    try{
+
+        URL base = new URL("https://www.googleapis.com/youtube/v3/search?part=snippet&key=");
     }
-
+    catch(MalformedURLException e)
+    {
+        e.printStackTrace();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -27,6 +27,8 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.0.1'
     compile 'com.mcxiaoke.volley:library:1.0.17'
+    compile 'com.android.support:design:25.0.1'
+    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     testCompile 'junit:junit:4.12'
     compile files('libs/YouTubeAndroidPlayerApi.jar')
     compile files('libs/google-api-client-1.22.0.jar')
