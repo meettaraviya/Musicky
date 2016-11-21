@@ -59,13 +59,13 @@ def rate(request):
 				rates=Rating.objects.filter(user=us)
 				for s in initdict:
 					print(s)
-					r =rates.objects.filter(song_id=s)
+					r =rates.filter(song_id=s)
 					if len(r) !=0 :
 						print(r)
-						vect_us=vect_us+(initdict[s] - r.value)**2 
-				vect_all.append({us.username:vect_us})
-			print(vect_all)
-			sorted(vect_all, key=lambda x:vect_all[x])
+						vect_us=vect_us+(initdict[s] - r[0].value)**2 
+				vect_all.append((vect_us,us.username))
+				print(vect_all)
+			vect_all=sorted(vect_all,key= lambda x:x[0])
 			print(vect_all)
 			return JsonResponse({'status':'yes'})
 	return JsonResponse({'status':'no'})
