@@ -18,19 +18,29 @@ def getPreferenceList(request):
 		print(request.POST)
 		userid = request.POST['id']
 		imp=[]
-		for i in request.POST
+		for i in request.POST:
 			imp.append(request.POST[i])
 		a = AppUser(username=userid)
 		print(a)
-		a.save()
 		g=Genre.objects.filter(name__in=imp)
+		print(g)		
 		for gen in g:
-			a.genre.add(gen)
-
+			a.genres.add(gen)
+		a.save()
 		songs = Song.objects.filter(genre__in=g)
 		x = serializers.serialize('json',songs)		
 		return HttpResponse(x)
 	return JsonResponse({'songs':[]})
+
+@csrf_exempt
+def rate(request):
+	if request.method == 'POST':
+		for song in request.POST:	
+			s = Song.objects.get(name=song)
+			s.rating=request.POST[song]
+			s.save()
+		return JsonResponse({'status':'yes'})
+	return JsonResponse({'status':'no'})
 
 @csrf_exempt
 def recommend(request):
