@@ -66,7 +66,10 @@ def rate(request):
 			songs ={}
 			for i in vect_all:
 				rates = Rating.objects.filter(user=i[1])
+				print("Rates")
+				print(rates)
 				for r in rates:
+					print(r)
 					if r.song_id in songs and r.song_id not in initdict:
 						song[r.song_id]=song[r.song_id] + f(x,r.value)
 					else :
