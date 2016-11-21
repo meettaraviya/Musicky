@@ -76,7 +76,7 @@ public class Categories extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),"Please select atleast 1 category",Toast.LENGTH_SHORT).show();
                         }
                         else{
-                            Intent intent = new Intent(getApplicationContext(), SongList.class);
+                            Intent intent = new Intent(getApplicationContext(), SongRateList.class);
                             intent.putExtra("favcategs",userPrefStrings);
                             startActivity(intent);
                         }
@@ -84,46 +84,6 @@ public class Categories extends AppCompatActivity {
                     }
                 }
         );
+       
     }
-    public class Getsongs extends AsyncTask<Void, Void, Void> {
-        // Get user defined values
-
-        @Override
-        protected void onPreExecute(){
-            //dialog = ProgressDialog.show(MainFeedActivity.this, null, "Posting...");
-        }
-
-
-        @Override
-        protected Void doInBackground(Void Params[]){
-            RequestQueue queue = Volley.newRequestQueue(this);
-            String url ="http://www.google.com";
-
-// Request a string response from the provided URL.
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            // Display the first 500 characters of the response string.
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.e("ERROR","That didn't work!");
-                }
-            }){
-            @Override
-                protected Map<String,String> getParams(){
-                Map<String, String> params = new HashMap<String, String>();
-                // Parameters will be feedback_id, pk with answers, token.
-                params.put("token", token);
-                params.put("feedback_id", ((Integer)pk).toString());
-
-
-                return params;                }
-            };
-            queue.add(stringRequest);
-        }
-    }
-
 }
