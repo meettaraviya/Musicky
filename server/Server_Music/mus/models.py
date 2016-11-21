@@ -28,4 +28,4 @@ class Rating(models.Model):
 	song_id = models.TextField(max_length=50)
 	value = models.SmallIntegerField()
 	def __str__(self):
-		return "%s and %s : %s" %(self.name, self.song_id, self.value)
+		return " %s : %s" %(self.song_id, self.value)

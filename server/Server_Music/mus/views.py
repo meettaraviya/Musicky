@@ -33,7 +33,7 @@ def getPreferenceList(request):
     return HttpResponse(x)
     return JsonResponse({'songs':[]})
 
-
+@csrf_exempt
 def rate(request):
     if request.method == 'POST':
         print(request.POST)
