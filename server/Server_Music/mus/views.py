@@ -15,9 +15,12 @@ import json
 @csrf_exempt
 def getPreferenceList(request):
 	if request.method == 'POST':
-		g=Genre.objects.filter(name__in=list(request.POST.values))
+		print(request.POST)
+		# userid = list(request.POST.keys())[0]
+		# g=Genre.objects.filter(name__in=list(request.POST[userid].values()))
+		g=Genre.objects.filter(name__in=list(request.POST.values()))
 		songs = Song.objects.filter(genre__in=g)
-	 	x = serializers.serialize('json',songs)		
+		x = serializers.serialize('json',songs)		
 		return HttpResponse(x)
 	return JsonResponse({'songs':[]})
 
@@ -27,5 +30,5 @@ def recommend(request):
 		for song in request.POST:	
 			s = Song.objects.get(name=song)
 			s.rating=request.POST[song]
-		
+
 	return JsonResponse({'songs':[]})
