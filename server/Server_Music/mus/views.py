@@ -113,7 +113,8 @@ def recommend(request):
 	dataReader = csv.reader(open('mus/names.csv'), delimiter=',', quotechar='"')
 	gs = ['Pop','EDM','Jazz','Rock']
 	for row in dataReader:
-		g = Genre.objects.get(name=gs[randint(0,3)])
+		g = Genre.objects.get(name=	gs[randint(0,3)])
 		song = Song(name=row[1],artist=row[0])
 		song.genre = g
 		song.save()
+	return HttpResponse ("Data saved")
