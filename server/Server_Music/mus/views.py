@@ -29,7 +29,7 @@ def getPreferenceList(request):
 			a.genres.add(gen)
 		songs = Song.objects.filter(genre__in=g)
 		x = serializers.serialize('json',songs)
-	return HttpResponse(x)
+		return HttpResponse(x)
 	return JsonResponse({	'songs':[]})
 
 def f(x,r):
@@ -50,15 +50,16 @@ def rate(request):
 						user.rating_set.add(r)
 						r.save()
 					else:
-						rs[0].value=request.POST[song][0]
-						user.rating_set.filter(song_id=song).update(value=int(request.POST[song][0]))
+						# rs[0].value=int(request.POST[song][0])
+						rs[0].value=int(request.POST[song])
+						# user.rating_set.filter(song_id=song).update(value=int(request.POST[song][0]))
+						user.rating_set.filter(song_id=song).update(value=int(request.POST[song]))
 						rs[0].save()
 
-					initdict[song] = int(request.POST[song][0]) 
-		 
+					# initdict[song] = int(request.POST[song][0])
+					initdict[song] = int(request.POST[song]) 
 			
-			allusers = AppUser.objects.all()
-			vect_all=[]
+			allusers = AppUser.objects.exclude(username=user.username)
 			for us in allusers:
 				vect_us=0
 				rates=Rating.objects.filter(user=us)
@@ -68,22 +69,25 @@ def rate(request):
 						vect_us=vect_us+(initdict[s] - r[0].value)**2 
 				vect_all.append((vect_us,us))
 			vect_all=sorted(vect_all,key= lambda x:x[0])
-			print(vect_all)
+			print('vect_all');print(vect_all)
 
 			songs ={}
 			for i in vect_all:
 				rates = Rating.objects.filter(user=i[1])
-				print("Rates")
-				print(rates)
+				print("Rates");print(rates)
 				for r in rates:
 					if r.song_id in songs and r.song_id not in initdict:
 						songs[r.song_id]=songs[r.song_id] + f(i[0],r.value)
 					elif r.song_id not in songs:
 						songs[r.song_id]=f(i[0],r.value)
-			sorted_songs = list(sorted(songs.items(), key=operator.itemgetter(1),reverse=True))
-			print('Final')
-			print(sorted_songs)
-			return JsonResponse(json.dumps(sorted_songs))
+			
+			sorted_songs = sorted(songs.items(), key=operator.itemgetter(1),reverse=True)
+			dict_sorted=dict(sorted_songs)
+			print('Final');print(sorted_songs)
+
+			song_cur=Songs.objects.filter(name__in=list(dict_sorted.keys())).filter(genre__in=user.genres.objects.all())
+			x = serializers.serialize('json',song_cur)
+			return HttpResponse(x)
 	return JsonResponse({'status':[]})
 
 
