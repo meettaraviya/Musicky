@@ -94,7 +94,7 @@ def rate(request):
 			x = serializers.serialize('json',song_req)
 			final={'recom':x,'mysongs':y}
 			final_json=json.dumps(final)
-			return HttpResponse(final_json)
+			return HttpResponse('{ \"recom\": '+x+', \"mysongs\": '+y+' }')
 	return JsonResponse({'status':[]})
 
 
