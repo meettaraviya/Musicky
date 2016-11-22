@@ -93,9 +93,11 @@ def rate(request):
 				return s.song_id
 
 			rate_list=Rating.objects.filter(user=user)
+			print(rate_list)
 			ss = list(map(s,rate_list))
+			print(ss)
 			song_list=Song.objects.filter(name__in=ss)
-
+			
 			y=serializers.serialize('json',song_list)
 			x = serializers.serialize('json',song_req)
 			
