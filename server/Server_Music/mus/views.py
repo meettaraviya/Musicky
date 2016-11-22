@@ -52,13 +52,10 @@ def rate(request):
 						user.rating_set.add(r)
 						r.save()
 					else:
-						# rs[0].value=int(request.POST[song][0])
 						rs[0].value=int(request.POST[song])
-						# user.rating_set.filter(song_id=song).update(value=int(request.POST[song][0]))
 						user.rating_set.filter(song_id=song).update(value=int(request.POST[song]))
 						rs[0].save()
 
-					# initdict[song] = int(request.POST[song][0])
 					initdict[song] = int(request.POST[song]) 
 			
 			allusers = AppUser.objects.exclude(username=user.username)
@@ -77,12 +74,14 @@ def rate(request):
 			songs ={}
 			for i in vect_all:
 				rates = Rating.objects.filter(user=i[1])
-				print("Rates");print(rates)
 				for r in rates:
+					print("Rates");print(r)
+				
 					if r.song_id in songs and r.song_id not in initdict:
 						songs[r.song_id]=songs[r.song_id] + f(i[0],r.value)
 					elif r.song_id not in songs:
 						songs[r.song_id]=f(i[0],r.value)
+					print(songs)
 			
 			sorted_songs = sorted(songs.items(), key=operator.itemgetter(1),reverse=True)
 			dict_sorted=dict(sorted_songs)
