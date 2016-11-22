@@ -45,7 +45,7 @@ def rate(request):
 			initdict={}
 			for song in request.POST:
 				if song!='id' :
-					rs = Rating.objects.filter(song_id=song)
+					rs = Rating.objects.filter(song_id=song,user=user)
 					print("RRSS::");print(rs)
 					if len(rs)==0:
 						r = Rating(value=int(request.POST[song]) ,song_id=song)
