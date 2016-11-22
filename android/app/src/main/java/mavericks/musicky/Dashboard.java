@@ -35,6 +35,9 @@ import java.util.ArrayList;
 public class Dashboard extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public String unique_id;
+    public SongListAdapter sadapter;
+    public SongListAdapter radapter;
+
     public String response;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,25 +55,25 @@ public class Dashboard extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
-        ListView mListView = (ListView) findViewById(R.id.recoms_list);
+        ListView mListView = (ListView) findViewById(R.id.mysongs_list);
         try{
             final ArrayList<String> recomtext = new ArrayList<>();
             JSONArray recoms = new JSONObject(response).getJSONArray("recom");
             for(int i=0; i<recoms.length(); i++){
                 recomtext.add(recoms.getJSONObject(i).getString("pk"));
             }
-            SongListAdapter adapter = new SongListAdapter(this, recomtext);
-            mListView.setAdapter(adapter);
+            radapter = new SongListAdapter(this, recomtext);
+            mListView.setAdapter(radapter);
 
-            mListView = (ListView) findViewById(R.id.mysongs_list);
+//            mListView = (ListView) findViewById(R.id.r);
             final ArrayList<String> msongstext = new ArrayList<>();
             JSONArray msongs = new JSONObject(response).getJSONArray("mysongs");
             for(int i=0; i<msongs.length(); i++){
                 msongstext.add(msongs.getJSONObject(i).getString("pk"));
                 Log.e("mysong",msongs.getJSONObject(i).getString("pk"));
             }
-            adapter = new SongListAdapter(this, recomtext);
-            mListView.setAdapter(adapter);
+            sadapter = new SongListAdapter(this, msongstext);
+//            mListView.setAdapter(sadapter);
 
         }
         catch (Exception e){
@@ -128,26 +131,27 @@ public class Dashboard extends AppCompatActivity
 
         View l = getLayoutInflater().inflate(R.layout.content_dashboard,null);
         if(l==null) Log.e("null0","nn");
+        ListView mListView = (ListView) findViewById(R.id.mysongs_list);
         View mysongsview = l.findViewById(R.id.mysongs_list);
-        View searchview = l.findViewById(R.id.search);
-        View recomview = l.findViewById(R.id.recoms_list);
+//        View searchview = l.findViewById(R.id.search);
+//        View recomview = l.findViewById(R.id.recoms_list);
 
 
         if (id == R.id.nav_mysongs) {
             Log.e("ND","mysongs");
-            mysongsview.setVisibility(View.VISIBLE);
-            recomview.setVisibility(View.GONE);
-            searchview.setVisibility(View.GONE);
+            mListView.setAdapter(sadapter);
+//            mysongsview.setVisibility(View.VISIBLE);
+//            recomview.setVisibility(View.GONE);
+//            searchview.setVisibility(View.GONE);
         } else if (id == R.id.nav_recom) {
             Log.e("ND","recom");
-            mysongsview.setVisibility(View.GONE);
-            searchview.setVisibility(View.GONE);
-            recomview.setVisibility(View.VISIBLE);
+            mListView.setAdapter(radapter);
+//            mysongsview.setVisibility(View.GONE);
+//            searchview.setVisibility(View.GONE);
+//            recomview.setVisibility(View.VISIBLE);
         } else if (id == R.id.nav_search) {
             Log.e("ND","search");
-            searchview.setVisibility(View.VISIBLE);
-            recomview.setVisibility(View.GONE);
-            mysongsview.setVisibility(View.GONE);
+//            searchview.setVisibility(View.VISIBLE);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

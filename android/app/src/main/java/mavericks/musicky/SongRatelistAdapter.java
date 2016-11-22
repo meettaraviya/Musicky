@@ -58,6 +58,8 @@ public class SongRatelistAdapter extends BaseAdapter {
         Log.e("INSIDE",((Integer) mDataSource.size()).toString());
         for(int i=0; i<mDataSource.size();i++)
             Log.e("INSIDE",mDataSource.get(i));
+
+
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating,

@@ -21,11 +21,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/categories_submit"
         android:text="SUBMIT"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/categories_submit"
-        android:id="@+id/search_text"/>
 
 
 </RelativeLayout>

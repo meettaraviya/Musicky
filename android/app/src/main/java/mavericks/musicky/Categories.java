@@ -51,6 +51,12 @@ public class Categories extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
+        SharedPreferences sharedPreferences = getSharedPreferences("a",MODE_PRIVATE);
+        if(sharedPreferences.contains("id")){
+            Intent intent = new Intent(this,Dashboard.class);
+            intent.putExtra("id",sharedPreferences.getString("id","-1"));
+
+        }
 
 //        FacebookSdk.sdkInitialize(getApplicationContext());
 //        AppEventsLogger.activateApp(this);
@@ -88,10 +94,6 @@ public class Categories extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),"Please select atleast 1 category",Toast.LENGTH_SHORT).show();
                         }
                         else{
-                            EditText mText=(EditText) findViewById(R.id.search_text);
-                            String search=mText.getText().toString();
-                            searchAndFind search_online = new searchAndFind(search);
-                            new Thread(search_online,"API_Search").start();
                             SendCategs sendCategs = new SendCategs(userPrefStrings);
                             new Thread(sendCategs,"SendCategs").start();
                         }
