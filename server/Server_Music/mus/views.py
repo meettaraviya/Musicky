@@ -93,7 +93,7 @@ def rate(request):
 			def func(s): 
 				return s.song_id
 
-			print("USER:::")print(user)
+			print("USER:::");print(user)
 			rate_list= user.rating_set.all()
 			print(rate_list)
 			ss = list(map(func,rate_list))
