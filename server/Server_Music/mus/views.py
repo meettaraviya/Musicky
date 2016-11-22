@@ -79,7 +79,7 @@ def rate(request):
 				
 					if r.song_id in songs and r.song_id not in initdict:
 						songs[r.song_id]=songs[r.song_id] + f(i[0],r.value)
-					elif r.song_id not in songs:
+					elif r.song_id not in songs and r.song_id not in initdict:
 						songs[r.song_id]=f(i[0],r.value)
 					print(songs)
 			
