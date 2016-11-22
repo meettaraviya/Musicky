@@ -59,11 +59,17 @@ public class Dashboard extends AppCompatActivity
             for(int i=0; i<recoms.length(); i++){
                 recomtext.add(recoms.getJSONObject(i).getString("pk"));
             }
-            Log.e("1","1");
             SongListAdapter adapter = new SongListAdapter(this, recomtext);
+            mListView.setAdapter(adapter);
 
-            Log.e("1","2");
-
+            mListView = (ListView) findViewById(R.id.mysongs_list);
+            final ArrayList<String> msongstext = new ArrayList<>();
+            JSONArray msongs = new JSONObject(response).getJSONArray("mysongs");
+            for(int i=0; i<msongs.length(); i++){
+                msongstext.add(msongs.getJSONObject(i).getString("pk"));
+                Log.e("mysong",msongs.getJSONObject(i).getString("pk"));
+            }
+            adapter = new SongListAdapter(this, recomtext);
             mListView.setAdapter(adapter);
 
         }
@@ -130,18 +136,18 @@ public class Dashboard extends AppCompatActivity
         if (id == R.id.nav_mysongs) {
             Log.e("ND","mysongs");
             mysongsview.setVisibility(View.VISIBLE);
-            recomview.setVisibility(View.INVISIBLE);
-            searchview.setVisibility(View.INVISIBLE);
+            recomview.setVisibility(View.GONE);
+            searchview.setVisibility(View.GONE);
         } else if (id == R.id.nav_recom) {
             Log.e("ND","recom");
-            mysongsview.setVisibility(View.VISIBLE);
-            searchview.setVisibility(View.INVISIBLE);
-            mysongsview.setVisibility(View.INVISIBLE);
+            mysongsview.setVisibility(View.GONE);
+            searchview.setVisibility(View.GONE);
+            recomview.setVisibility(View.VISIBLE);
         } else if (id == R.id.nav_search) {
             Log.e("ND","search");
-            mysongsview.setVisibility(View.VISIBLE);
-            recomview.setVisibility(View.INVISIBLE);
-            mysongsview.setVisibility(View.INVISIBLE);
+            searchview.setVisibility(View.VISIBLE);
+            recomview.setVisibility(View.GONE);
+            mysongsview.setVisibility(View.GONE);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
