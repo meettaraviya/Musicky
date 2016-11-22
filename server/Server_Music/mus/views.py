@@ -88,21 +88,19 @@ def rate(request):
 			
 			song_cur=Song.objects.filter(name__in=list(dict_sorted.keys()))
 			song_req=song_cur.filter(genre__in=list(user.genres.all()))
-			print(song_cur)
 			def func(s): 
 				return s.song_id
 
-			rate_list=Rating.objects.filter(user=user)
+			print("USER:::")print(user)
+			rate_list= user.rating_set.all()
 			print(rate_list)
-			ss = list(map(s,rate_list))
+			ss = list(map(func,rate_list))
 			print(ss)
 			song_list=Song.objects.filter(name__in=ss)
-			
+
 			y=serializers.serialize('json',song_list)
 			x = serializers.serialize('json',song_req)
-			
-			final={'recom':x,'mysongs':y}
-			final_json=json.dumps(final)
+
 			return HttpResponse('{ \"recom\": '+x+', \"mysongs\": '+y+' }')
 	
 	return JsonResponse({'status':[]})
