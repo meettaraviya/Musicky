@@ -41,22 +41,21 @@ def rate(request):
 		u = AppUser.objects.filter(username=request.POST.get('id'))	
 		if len(u)!=0:
 			user = u[0]
+			print(request.POST)
 			initdict={}
 			for song in request.POST:
 				if song!='id' :
-					rs = Rating.objects.filter(song_id=song)
+					rs = Rating.objects.filter(song_id=song,user=user)
+					print("RRSS::");print(rs)
 					if len(rs)==0:
 						r = Rating(value=int(request.POST[song]) ,song_id=song)
 						user.rating_set.add(r)
 						r.save()
 					else:
-						# rs[0].value=int(request.POST[song][0])
 						rs[0].value=int(request.POST[song])
-						# user.rating_set.filter(song_id=song).update(value=int(request.POST[song][0]))
 						user.rating_set.filter(song_id=song).update(value=int(request.POST[song]))
 						rs[0].save()
 
-					# initdict[song] = int(request.POST[song][0])
 					initdict[song] = int(request.POST[song]) 
 			
 			allusers = AppUser.objects.exclude(username=user.username)
@@ -75,12 +74,14 @@ def rate(request):
 			songs ={}
 			for i in vect_all:
 				rates = Rating.objects.filter(user=i[1])
-				print("Rates");print(rates)
 				for r in rates:
+					print("Rates");print(r)
+				
 					if r.song_id in songs and r.song_id not in initdict:
 						songs[r.song_id]=songs[r.song_id] + f(i[0],r.value)
-					elif r.song_id not in songs:
+					elif r.song_id not in songs and r.song_id not in initdict:
 						songs[r.song_id]=f(i[0],r.value)
+					print(songs)
 			
 			sorted_songs = sorted(songs.items(), key=operator.itemgetter(1),reverse=True)
 			dict_sorted=dict(sorted_songs)
@@ -91,7 +92,7 @@ def rate(request):
 			def func(s): 
 				return s.song_id
 
-			print("USER:::")print(user)
+			print("USER:::");print(user)
 			rate_list= user.rating_set.all()
 			print(rate_list)
 			ss = list(map(func,rate_list))
@@ -105,12 +106,15 @@ def rate(request):
 	
 	return JsonResponse({'status':[]})
 
-
+import csv
+from random import randint
 @csrf_exempt
-def recommend(request):
-	if request.method == 'POST':
-		for song in request.POST:	
-			s = Song.objects.get(name=song)
-			s.rating=request.POST[song]
-
-	return JsonResponse({'songs':[]})
+def recommend(request):	
+	dataReader = csv.reader(open('mus/names.csv'), delimiter=',', quotechar='"')
+	gs = ['Pop','EDM','Jazz','Rock']
+	for row in dataReader:
+		g = Genre.objects.get(name=	gs[randint(0,3)])
+		song = Song(name=row[1],artist=row[0])
+		song.genre = g
+		song.save()
+	return HttpResponse ("Data saved")
