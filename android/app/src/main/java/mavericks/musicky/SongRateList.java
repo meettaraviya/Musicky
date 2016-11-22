@@ -2,6 +2,7 @@ package mavericks.musicky;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,6 +29,7 @@ import java.util.Map;
 
 public class SongRateList extends AppCompatActivity {
     private ListView mListView;
+
     Map<String,String> rating;
     String response;
     Context context;
@@ -126,7 +128,11 @@ public class SongRateList extends AppCompatActivity {
                                 return;
                             }
                             else{
-                                Log.e("NO ERR","-1 resp");
+                                Log.e("NO ERR",responseString);
+                                Intent intent = new Intent(context,Dashboard.class);
+                                intent.putExtra("id",unique_id);
+                                intent.putExtra("response",responseString);
+                                startActivity(intent);
                             }
 
 
