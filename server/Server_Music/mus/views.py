@@ -106,12 +106,14 @@ def rate(request):
 	
 	return JsonResponse({'status':[]})
 
-
+import csv
+from random import randint
 @csrf_exempt
-def recommend(request):
-	if request.method == 'POST':
-		for song in request.POST:	
-			s = Song.objects.get(name=song)
-			s.rating=request.POST[song]
-
-	return JsonResponse({'songs':[]})
+def recommend(request):	
+	dataReader = csv.reader(open('mus/names.csv'), delimiter=',', quotechar='"')
+	gs = ['Pop','EDM','Jazz','Rock']
+	for row in dataReader:
+		g = Genre.objects.get(name=gs[randint(0,3)])
+		song = Song(name=row[1],artist=row[0])
+		song.genre = g
+		song.save()
