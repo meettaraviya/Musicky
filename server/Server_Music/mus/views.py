@@ -46,7 +46,7 @@ def rate(request):
 				if song!='id' :
 					rs = Rating.objects.filter(song_id=song)
 					if len(rs)==0:
-						r = Rating(value=int(request.POST[song][0]) ,song_id=song)
+						r = Rating(value=int(request.POST[song]) ,song_id=song)
 						user.rating_set.add(r)
 						r.save()
 					else:
@@ -60,6 +60,7 @@ def rate(request):
 					initdict[song] = int(request.POST[song]) 
 			
 			allusers = AppUser.objects.exclude(username=user.username)
+			vect_all=[]
 			for us in allusers:
 				vect_us=0
 				rates=Rating.objects.filter(user=us)
@@ -84,9 +85,12 @@ def rate(request):
 			sorted_songs = sorted(songs.items(), key=operator.itemgetter(1),reverse=True)
 			dict_sorted=dict(sorted_songs)
 			print('Final');print(sorted_songs)
+			
+			song_cur=Song.objects.filter(name__in=list(dict_sorted.keys()))
+			song_req=song_cur.filter(genre__in=list(user.genres.all()))
+			print(song_cur)
 
-			song_cur=Songs.objects.filter(name__in=list(dict_sorted.keys())).filter(genre__in=user.genres.objects.all())
-			x = serializers.serialize('json',song_cur)
+			x = serializers.serialize('json',song_req)
 			return HttpResponse(x)
 	return JsonResponse({'status':[]})
 
