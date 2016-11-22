@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,22 +25,28 @@ import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.security.SecureRandom;
 import java.math.BigInteger;
+import java.util.Scanner;
 
 public class Categories extends AppCompatActivity {
     private ListView mListView;
     Context context;
     public String unique_id;
-
+    public String final_response;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +88,10 @@ public class Categories extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),"Please select atleast 1 category",Toast.LENGTH_SHORT).show();
                         }
                         else{
+                            EditText mText=(EditText) findViewById(R.id.search_text);
+                            String search=mText.getText().toString();
+                            searchAndFind search_online = new searchAndFind(search);
+                            new Thread(search_online,"API_Search").start();
                             SendCategs sendCategs = new SendCategs(userPrefStrings);
                             new Thread(sendCategs,"SendCategs").start();
                         }
@@ -89,6 +100,53 @@ public class Categories extends AppCompatActivity {
                 }
         );
 
+    }
+    private class searchAndFind implements Runnable {
+        String inp1;
+        public searchAndFind(String input)
+        {
+            inp1=input;
+        }
+
+        @Override
+        public void run() {
+            try {
+                String base1 = "https://www.googleapis.com/youtube/v3/search?part=snippet&key=AIzaSyAI5YtqVjFmlp-2Y4r4gPM4wZ2DAQDwL5M&q=";
+                base1=base1+inp1;
+                URL final_s1=new URL(base1);
+                URLConnection connect= final_s1.openConnection();
+                InputStream response = connect.getInputStream();
+                String inputStreamString = new Scanner(response,"UTF-8").useDelimiter("\\A").next();
+                Log.e("RESPONSEEEEEEEEEEEEEEEE",inputStreamString);
+//
+//
+//                BufferedReader streamReader = new BufferedReader(new InputStreamReader(response, "UTF-8"));
+//                StringBuilder responseStrBuilder = new StringBuilder();
+//                String inputStr;
+//
+//
+//                while ((inputStr = streamReader.readLine()) != null) {
+//                    responseStrBuilder.append(inputStr);
+//                }
+                JSONObject response_JSON=new JSONObject(inputStreamString);
+//                Log.e("TIefeeevEEEEEEE",response.toString());
+
+
+                String resp= response_JSON.getJSONArray("items").getJSONObject(0).getJSONObject("id").getString("videoId");
+                final_response=resp;
+                Log.e("TIMEEEEEEEEE",final_response);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+        }
     }
 
     private class SendCategs implements Runnable {
@@ -121,6 +179,7 @@ public class Categories extends AppCompatActivity {
                                 Intent intent = new Intent(context,SongRateList.class);
                                 intent.putExtra("songs",responseString);
                                 intent.putExtra("id",unique_id);
+                                intent.putExtra("searchfield",final_response);  
                                 startActivity(intent);
                             }
 
