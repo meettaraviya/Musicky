@@ -43,7 +43,7 @@ Jinja2==2.8
 language-selector==0.1
 LibAppArmor==2.10.95
 louis==2.6.4
-lxml==3.5.0
+lxml==4.6.5
 MarkupSafe==0.23
 matplotlib==1.5.1
 mock==1.3.0
