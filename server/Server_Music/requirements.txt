@@ -78,7 +78,7 @@ python-systemd==231
 python3-openid==3.0.10
 pytz==2014.10
 pyxdg==0.25
-reportlab==3.3.0
+reportlab==3.5.55
 requests==2.9.1
 requests-oauthlib==0.7.0
 sessioninstaller==0.0.0
